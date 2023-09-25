@@ -1,3 +1,5 @@
+import type { Config } from 'tailwindcss';
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: ['class'],
@@ -74,4 +76,4 @@ module.exports = {
     },
   },
   plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography')],
-};
+} satisfies Config;
