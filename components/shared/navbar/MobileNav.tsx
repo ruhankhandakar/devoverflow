@@ -7,13 +7,10 @@ import {
   Sheet,
   SheetClose,
   SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import NavContent from './NavContent';
-import { Button } from '@/components/ui/button';
+import NavContent from '../common/NavContent';
+import { NavAuthSignIn, NavAuthSignUp } from '../common/NavAuth';
 
 const MobileNav = () => {
   return (
@@ -42,7 +39,7 @@ const MobileNav = () => {
             Dev <span className="text-primary-500">Flow</span>
           </p>
         </Link>
-        <div>
+        <div className="flex h-full flex-col pb-9">
           <SheetClose asChild>
             <NavContent />
           </SheetClose>
@@ -50,18 +47,10 @@ const MobileNav = () => {
           <SignedOut>
             <div className="flex flex-col gap-3">
               <SheetClose asChild>
-                <Link href="/sign-in">
-                  <Button className="small-medium btn-secondary min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
-                    <span className="primary-text-gradient">Log In</span>
-                  </Button>
-                </Link>
+                <NavAuthSignIn />
               </SheetClose>
               <SheetClose asChild>
-                <Link href="/sign-up">
-                  <Button className="small-medium light-border-2 btn-tertiary text-dark400_light900 min-h-[41px] w-full rounded-lg px-4 py-3 shadow-none">
-                    Sign Up
-                  </Button>
-                </Link>
+                <NavAuthSignUp />
               </SheetClose>
             </div>
           </SignedOut>
