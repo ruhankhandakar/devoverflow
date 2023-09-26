@@ -2,6 +2,7 @@ import React from 'react';
 
 import NavBar from '@/components/shared/navbar/Navbar';
 import LeftSidebar from '@/components/shared/LeftSidebar';
+import RIghtSidebar from '@/components/shared/RIghtSidebar';
 
 const RootLayout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -13,7 +14,7 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
           Middle
           <div className="mx-auto w-full max-w-5xl">{children}</div>
         </section>
-        Right Sidebar
+        <RIghtSidebar />
       </div>
       Toaster
     </main>
