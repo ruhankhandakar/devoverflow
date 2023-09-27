@@ -48,3 +48,25 @@ export interface BadgeCounts {
 export type BadgeCriteriaType = keyof typeof BADGE_CRITERIA;
 
 export type ModeType = 'dark' | 'light';
+
+export type Tags = {
+  _id: string;
+  name: string;
+};
+
+export type Author = {
+  _id: string;
+  name: string;
+  picture: string;
+};
+
+export interface QuestionData {
+  _id: string;
+  title: string;
+  tags: Tags[];
+  author: Author;
+  upvotes: number;
+  views: number;
+  answers: Array<object>;
+  createdAt: string;
+}

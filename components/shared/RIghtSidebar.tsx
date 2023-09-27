@@ -30,27 +30,27 @@ const topQuestions = [
 
 const popularTags = [
   {
-    _id: 1,
+    _id: '1',
     name: 'JavaScript',
     totalQuestions: 5,
   },
   {
-    _id: 2,
+    _id: '2',
     name: 'NodeJS',
     totalQuestions: 10,
   },
   {
-    _id: 3,
+    _id: '3',
     name: 'Next.JS',
     totalQuestions: 6,
   },
   {
-    _id: 4,
+    _id: '4',
     name: 'Vue',
     totalQuestions: 1,
   },
   {
-    _id: 5,
+    _id: '5',
     name: 'DevOps',
     totalQuestions: 3,
   },

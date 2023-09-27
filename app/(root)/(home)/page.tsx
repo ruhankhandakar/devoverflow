@@ -6,34 +6,44 @@ import Filter from '@/components/shared/Filter';
 import { HomePageFilters } from '@/constants/filters';
 import HomeFilters from '@/components/home/HomeFilters';
 import NoResult from '@/components/shared/NoResult';
+import QuestionCard from '@/components/cards/QuestionCard';
+import type { QuestionData } from '@/types';
 
-const questions = [
-  // {
-  //   _id: 1,
-  //   title: 'Question 1',
-  //   tags: [
-  //     { _id: 1, name: 'python' },
-  //     { _id: 2, name: 'SQL' },
-  //   ],
-  //   author: 'John Doe',
-  //   upvotes: 10,
-  //   views: 20,
-  //   answers: 2,
-  //   createdAt: '2021-09-01T12:00:00.000Z',
-  // },
-  // {
-  //   _id: 2,
-  //   title: 'How to center a DIV',
-  //   tags: [
-  //     { _id: 1, name: 'CSS' },
-  //     { _id: 1, name: 'HTML' },
-  //   ],
-  //   author: 'John Doe',
-  //   upvotes: 10,
-  //   views: 20,
-  //   answers: 2,
-  //   createdAt: '2021-09-01T12:00:00.000Z',
-  // },
+const questions: QuestionData[] = [
+  {
+    _id: '1',
+    title: 'Question 1',
+    tags: [
+      { _id: 't1', name: 'python' },
+      { _id: 't2', name: 'SQL' },
+    ],
+    author: {
+      _id: '1a',
+      name: 'John Doe',
+      picture: 'https://picture.com',
+    },
+    upvotes: 109873,
+    views: 209800,
+    answers: [{}],
+    createdAt: '2021-09-01T12:00:00.000Z',
+  },
+  {
+    _id: '2',
+    title: 'How to center a DIV',
+    tags: [
+      { _id: 't21', name: 'CSS' },
+      { _id: 't22', name: 'HTML' },
+    ],
+    author: {
+      _id: '1b',
+      name: 'Mike Doe',
+      picture: 'https://picture.com',
+    },
+    upvotes: 10,
+    views: 20,
+    answers: [{}],
+    createdAt: '2021-09-01T12:00:00.000Z',
+  },
 ];
 
 export default function Home() {
@@ -68,7 +78,9 @@ export default function Home() {
 
       <div className="mt-10 flex w-full flex-col gap-6 ">
         {questions.length ? (
-          questions.map((question) => 'QuestionCard')
+          questions.map((question) => (
+            <QuestionCard key={question._id} data={question} />
+          ))
         ) : (
           <NoResult
             title="There's no question to show"
