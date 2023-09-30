@@ -1,23 +1,40 @@
 'use server';
+import { revalidatePath } from 'next/cache';
 
 import { connectToDatabase } from '../mongoose';
 import Question from '@/database/question.model';
+import User from '@/database/user.model';
 import Tag from '@/database/tag.model';
+import { CreateQuestionParams, GetQuestionsParams } from './shared.types';
+import { QuestionData } from '@/types';
 
-type ParamsType = {
-  title: string;
-  content: string;
-  tags: string[];
-  author: string;
-  path?: string;
-};
-
-export async function createQuestion(params: ParamsType) {
+export async function getQuestions(params?: GetQuestionsParams) {
   try {
     // Connect to DB
     await connectToDatabase();
 
-    const { title, content, tags, author } = params;
+    const questions = (await Question.find({})
+      .populate({
+        path: 'tags',
+        model: Tag,
+      })
+      .populate({
+        path: 'author',
+        model: User,
+      })) as QuestionData[];
+    return { questions };
+  } catch (error) {
+    console.error('getQuestions', error);
+    throw error;
+  }
+}
+
+export async function createQuestion(params: CreateQuestionParams) {
+  try {
+    // Connect to DB
+    await connectToDatabase();
+
+    const { title, content, tags, author, path } = params;
 
     // Create a new Question
     const question = await Question.create({
@@ -61,5 +78,7 @@ export async function createQuestion(params: ParamsType) {
     });
 
     // Increment author's reputation by +5 for creating new question
+
+    revalidatePath(path);
   } catch (error) {}
 }

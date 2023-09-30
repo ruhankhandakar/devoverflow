@@ -52,6 +52,7 @@ const Question: React.FC<Props> = ({ mongoUserId = '' }) => {
         content: values.explanation,
         tags: values.tags,
         author: JSON.parse(mongoUserId),
+        path: pathname,
       });
 
       router.push('/');
@@ -66,7 +67,6 @@ const Question: React.FC<Props> = ({ mongoUserId = '' }) => {
     e: React.KeyboardEvent<HTMLInputElement>,
     field: any
   ) => {
-    console.log('myLog', e.key, field.name);
     if (e.key === 'Enter' && field.name === 'tags') {
       e.preventDefault();
 

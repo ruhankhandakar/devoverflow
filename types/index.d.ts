@@ -1,4 +1,7 @@
+import { Schema } from 'mongoose';
+
 import { BADGE_CRITERIA } from '@/constants';
+import { IUser } from '@/database/user.model';
 
 export interface SidebarLink {
   imgURL: string;
@@ -50,23 +53,28 @@ export type BadgeCriteriaType = keyof typeof BADGE_CRITERIA;
 export type ModeType = 'dark' | 'light';
 
 export type Tags = {
-  _id: string;
+  _id: Schema.Types.ObjectId;
   name: string;
+  followers?: IUser[];
+  questions: Schema.Types.ObjectId[];
+  createdOn: Date;
 };
 
 export type Author = {
-  _id: string;
+  _id: Schema.Types.ObjectId;
   name: string;
   picture: string;
 };
 
 export interface QuestionData {
-  _id: string;
+  _id: Schema.Types.ObjectId;
   title: string;
+  content: string;
   tags: Tags[];
-  author: Author;
-  upvotes: number;
   views: number;
+  upvotes?: IUser[];
+  downvotes?: IUser[];
+  author: IUser;
   answers: Array<object>;
   createdAt: string;
 }
