@@ -4,6 +4,7 @@ import { Editor } from '@tinymce/tinymce-react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
+import { useRouter, usePathname } from 'next/navigation';
 
 import {
   Form,
@@ -23,9 +24,15 @@ import { createQuestion } from '@/lib/actions/question.action';
 
 const type: any = 'create';
 
-const Question = () => {
+interface Props {
+  mongoUserId: string;
+}
+
+const Question: React.FC<Props> = ({ mongoUserId = '' }) => {
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const router = useRouter();
+  const pathname = usePathname();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof QuestionsSchema>>({
@@ -40,12 +47,14 @@ const Question = () => {
   const onSubmit = async (values: z.infer<typeof QuestionsSchema>) => {
     setIsSubmitting(true);
     try {
-      console.log(values);
-      // TODO: Make an Async call to our API -> Create Question
+      await createQuestion({
+        title: values.title,
+        content: values.explanation,
+        tags: values.tags,
+        author: JSON.parse(mongoUserId),
+      });
 
-      await createQuestion({});
-
-      // Navigate to home to see a question
+      router.push('/');
     } catch (error) {
       console.log('submitting error: ' + error);
     } finally {
@@ -193,7 +202,7 @@ const Question = () => {
                       {field.value.map((tag) => (
                         <Badge
                           key={tag}
-                          className="subtle-medium background-light800_dark300 text-light400_light500 flex-center gap-2 rounded-md border-none px-4 py-2 capitalize"
+                          className="subtle-medium background-light800_dark300 text-light400_light500 flex-center gap-2 rounded-md border-none px-4 py-2 uppercase"
                         >
                           {tag}{' '}
                           <Image
