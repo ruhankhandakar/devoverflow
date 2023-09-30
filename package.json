@@ -30,6 +30,8 @@
     "eslint-config-standard": "17.1.0",
     "eslint-plugin-tailwindcss": "3.13.0",
     "lucide-react": "0.279.0",
+    "mongodb": "6.1.0",
+    "mongoose": "7.5.3",
     "next": "13.5.2",
     "postcss": "8.4.30",
     "prettier": "3.0.3",
