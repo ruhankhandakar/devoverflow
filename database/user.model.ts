@@ -13,6 +13,7 @@ export interface IUser extends Document {
   reputation?: number;
   saved?: Schema.Types.ObjectId[];
   joinedAt: Date;
+  isActive?: boolean;
 }
 
 const UserSchema = new Schema({
@@ -60,6 +61,10 @@ const UserSchema = new Schema({
       ref: 'Question',
     },
   ],
+  isActive: {
+    type: Boolean,
+    default: true,
+  },
   joinedAt: {
     type: Date,
     default: Date.now,
