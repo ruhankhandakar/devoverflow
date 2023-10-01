@@ -45,7 +45,7 @@ export async function updateUser(params: UpdateUserParams) {
     await User.findOneAndUpdate({ clerkId }, updateData, { new: true });
     revalidatePath(path);
   } catch (error) {
-    console.error('createUser', error);
+    console.error('updateUser', error);
     throw error;
   }
 }
@@ -71,7 +71,7 @@ export async function deleteUser(params: DeleteUserParams) {
 
     return deletedUser;
   } catch (error) {
-    console.error('createUser', error);
+    console.error('deleteUser', error);
     throw error;
   }
 }
