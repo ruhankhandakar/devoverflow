@@ -65,9 +65,7 @@ export async function deleteUser(params: DeleteUserParams) {
     // Delete user from database
     // And questions, answers, comments, etc. // We won't do it here
 
-    const deletedUser = await User.findByIdAndUpdate(user._id, {
-      isActive: false,
-    });
+    const deletedUser = await User.findByIdAndDelete(user._id);
 
     return deletedUser;
   } catch (error) {
