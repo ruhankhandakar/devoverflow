@@ -31,7 +31,11 @@ const QuestionCard: React.FC<Props> = ({
       </div>
       <div className="mt-3.5 flex flex-wrap gap-2">
         {tags.map((tag) => (
-          <RenderTag key={tag._id} _id={tag._id} name={tag.name} />
+          <RenderTag
+            key={JSON.stringify(tag._id)}
+            _id={JSON.stringify(tag._id)}
+            name={tag.name}
+          />
         ))}
       </div>
 
@@ -48,7 +52,7 @@ const QuestionCard: React.FC<Props> = ({
         <Metric
           imgUrl="/assets/icons/like.svg"
           alt="Up votes"
-          value={formatNumberWithExtension(upvotes)}
+          value={formatNumberWithExtension(upvotes?.length || 0)}
           title="Votes"
           textStyles="small-medium text-dark400_light800"
         />
