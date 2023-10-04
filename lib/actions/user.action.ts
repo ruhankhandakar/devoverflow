@@ -1,13 +1,28 @@
 'use server';
 
-import User from '@/database/user.model';
+import User, { IUser } from '@/database/user.model';
 import { connectToDatabase } from '../mongoose';
 import {
   CreateUserParams,
   DeleteUserParams,
+  GetAllUsersParams,
   UpdateUserParams,
 } from './shared.types';
 import { revalidatePath } from 'next/cache';
+
+export async function getAllUsers(params?: GetAllUsersParams) {
+  try {
+    await connectToDatabase();
+
+    // const { page = 1, pageSize = 20, filter, searchQuery } = params;
+
+    const users = (await User.find({}).sort({ createdAt: -1 })) as IUser[];
+    return { users };
+  } catch (error: any) {
+    console.error('getAllUsers', error);
+    throw new Error(error);
+  }
+}
 
 export async function getUserById(params: { userId: string }) {
   try {
