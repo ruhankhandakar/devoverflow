@@ -1,7 +1,7 @@
 'use client';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 
 import {
   downvoteQuestion,
@@ -10,6 +10,7 @@ import {
 import { formatNumberWithExtension } from '@/lib/utils';
 import { downvoteAnswer, upvoteAnswer } from '@/lib/actions/answer.action';
 import { toggleSaveQuestion } from '@/lib/actions/user.action';
+import { viewQuestion } from '@/lib/actions/interacton.action';
 
 interface Props {
   type: 'Question' | 'Answer';
@@ -33,6 +34,7 @@ const Votes: React.FC<Props> = ({
   hasSaved,
 }) => {
   const pathName = usePathname();
+  const router = useRouter();
 
   const handleVote = async (action: 'upvote' | 'downvote') => {
     if (!userId) return;
@@ -90,6 +92,17 @@ const Votes: React.FC<Props> = ({
       console.log('handleSave error', error);
     }
   };
+
+  useEffect(() => {
+    if (type === 'Question') {
+      console.log('viewQuestion');
+
+      viewQuestion({
+        questionId: JSON.parse(itemId),
+        userId: userId ? JSON.parse(userId) : undefined,
+      });
+    }
+  }, [itemId, userId, pathName, router, type]);
 
   return (
     <div className="flex gap-5">
@@ -151,4 +164,4 @@ const Votes: React.FC<Props> = ({
   );
 };
 
-export default Votes;
+export default React.memo(Votes);

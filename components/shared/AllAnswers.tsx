@@ -28,7 +28,7 @@ const AllAnswers: React.FC<Props> = async ({
   const results = await getAnswers({ questionId: JSON.parse(questionId) });
 
   return (
-    <div className="mt-11">
+    <div className="my-11">
       <div className="flex items-center justify-between">
         <h3 className="primary-text-gradient">{totalAnswers} Answers</h3>
 
