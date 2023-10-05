@@ -21,6 +21,7 @@ import { QuestionsSchema } from '@/lib/validations';
 import { Badge } from '../ui/badge';
 import Image from 'next/image';
 import { createQuestion } from '@/lib/actions/question.action';
+import { useTheme } from '@/context/ThemeProvider';
 
 const type: any = 'create';
 
@@ -29,6 +30,7 @@ interface Props {
 }
 
 const Question: React.FC<Props> = ({ mongoUserId = '' }) => {
+  const { mode } = useTheme();
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
@@ -171,6 +173,8 @@ const Question: React.FC<Props> = ({ mongoUserId = '' }) => {
                       'codesample | bold italic backcolor | alignleft aligncenter | ' +
                       'alignright alignjustify | bullist',
                     content_style: 'body { font-family:Inter; font-size:16px }',
+                    skin: mode === 'dark' ? 'oxide-dark' : 'oxide',
+                    content_css: mode,
                   }}
                 />
               </FormControl>
