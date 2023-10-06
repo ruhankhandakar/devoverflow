@@ -6,7 +6,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Editor } from '@tinymce/tinymce-react';
 import Image from 'next/image';
-import type { Schema } from 'mongoose';
 
 import {
   Form,

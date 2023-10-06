@@ -43,7 +43,7 @@ export async function getAnswers(params: GetAnswersParams) {
     // Connect to DB
     await connectToDatabase();
 
-    const { questionId, page, pageSize, sortBy } = params;
+    const { questionId } = params;
 
     const answers = await Answer.find({ question: questionId })
       .populate('author', '_id clerkId name picture')

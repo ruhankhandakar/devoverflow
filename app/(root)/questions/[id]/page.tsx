@@ -13,8 +13,9 @@ import { formatNumberWithExtension, getTimeStamp } from '@/lib/utils';
 import Votes from '@/components/shared/Votes';
 import { auth } from '@clerk/nextjs';
 import { getUserById } from '@/lib/actions/user.action';
+import { URLProps } from '@/types';
 
-const Page = async ({ params, searchParams }) => {
+const Page = async ({ params, searchParams }: URLProps) => {
   const { question } = await getQuestionById({ questionId: params.id });
   const { userId: clerkId } = auth();
 

@@ -14,7 +14,7 @@ import Question from '@/database/question.model';
 export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
   try {
     await connectToDatabase();
-    const { userId, limit } = params;
+    const { userId } = params;
 
     const user = await User.findById(userId);
 
@@ -59,7 +59,7 @@ export async function getQuestionByTagId(params: GetQuestionsByTagIdParams) {
   try {
     await connectToDatabase();
 
-    const { tagId, page = 1, pageSize = 10, searchQuery } = params;
+    const { tagId, searchQuery } = params;
 
     const tagFilter: FilterQuery<ITag> = { _id: tagId };
 
