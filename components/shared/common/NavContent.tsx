@@ -7,6 +7,7 @@ import { usePathname } from 'next/navigation';
 
 import { SheetClose } from '@/components/ui/sheet';
 import { sidebarLinks } from '@/constants';
+import { useAuth } from '@clerk/nextjs';
 
 interface Props {
   sectionClassName?: string;
@@ -16,6 +17,7 @@ const NavContent: FC<Props> = ({
   sectionClassName = '',
   isForDweb = false,
 }) => {
+  const { userId } = useAuth();
   const pathName = usePathname();
 
   return (
@@ -24,6 +26,14 @@ const NavContent: FC<Props> = ({
         const isActive =
           (pathName.includes(link.route) && link.route.length > 1) ||
           pathName === link.route;
+
+        if (link.route === '/profile') {
+          if (userId) {
+            link.route = `${link.route}/${userId}`;
+          } else {
+            return null;
+          }
+        }
 
         const linkComp = (
           <Link
