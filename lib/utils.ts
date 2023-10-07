@@ -49,3 +49,14 @@ export const formatNumberWithExtension = (number: number): string => {
     return number.toString();
   }
 };
+
+export const getJoinedDate = (dateObj: Date): string => {
+  if (!(dateObj instanceof Date)) {
+    return 'Invalid Date';
+  }
+
+  const month = dateObj.toLocaleString('default', { month: 'long' });
+  const year = dateObj.getFullYear();
+
+  return `${month} ${year}`;
+};

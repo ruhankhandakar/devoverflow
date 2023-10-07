@@ -8,7 +8,9 @@ import {
   GetAnswersParams,
   CreateAnswerParams,
   AnswerVoteParams,
+  DeleteAnswerParams,
 } from './shared.types.d';
+import InterAction from '@/database/interaction.model';
 
 export async function createAnswer(params: CreateAnswerParams) {
   try {
@@ -149,6 +151,35 @@ export async function downvoteAnswer(parms: AnswerVoteParams) {
     revalidatePath(path);
   } catch (error) {
     console.error('downvoteAnswer', error);
+    throw error;
+  }
+}
+
+export async function deleteAnswer(params: DeleteAnswerParams) {
+  try {
+    // Connect to DB
+    await connectToDatabase();
+
+    const { answerId, path } = params;
+
+    const answer = await Answer.findById(answerId);
+
+    if (!answer) throw new Error('Answer not found');
+
+    await Answer.deleteOne({ _id: answerId });
+    await Question.updateMany(
+      { _id: answer.question },
+      {
+        $pull: {
+          answers: answerId,
+        },
+      }
+    );
+    await InterAction.deleteMany({ answer: answerId });
+
+    revalidatePath(path);
+  } catch (error) {
+    console.error('deleteQuestion', error);
     throw error;
   }
 }

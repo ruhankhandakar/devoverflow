@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useForm } from 'react-hook-form';
 import { useRouter, usePathname } from 'next/navigation';
+import Image from 'next/image';
 
 import {
   Form,
@@ -19,45 +20,65 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { QuestionsSchema } from '@/lib/validations';
 import { Badge } from '../ui/badge';
-import Image from 'next/image';
-import { createQuestion } from '@/lib/actions/question.action';
+import { createQuestion, editQuestion } from '@/lib/actions/question.action';
 import { useTheme } from '@/context/ThemeProvider';
-
-const type: any = 'create';
 
 interface Props {
   mongoUserId: string;
+  type?: 'create' | 'edit';
+  questionDetails?: string;
 }
 
-const Question: React.FC<Props> = ({ mongoUserId = '' }) => {
+const Question: React.FC<Props> = ({
+  mongoUserId = '',
+  type,
+  questionDetails,
+}) => {
   const { mode } = useTheme();
   const editorRef = useRef(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const pathname = usePathname();
 
+  const parseQuestionDetails = questionDetails
+    ? JSON.parse(questionDetails)
+    : {};
+
+  const groupedTags = (parseQuestionDetails?.tags || []).map((tag) => tag.name);
+
+  console.log('parseQuestionDetails', parseQuestionDetails);
+
   // 1. Define your form.
   const form = useForm<z.infer<typeof QuestionsSchema>>({
     resolver: zodResolver(QuestionsSchema),
     defaultValues: {
-      title: '',
-      explanation: '',
-      tags: [],
+      title: parseQuestionDetails.title || '',
+      explanation: parseQuestionDetails.content || '',
+      tags: groupedTags || [],
     },
   });
 
   const onSubmit = async (values: z.infer<typeof QuestionsSchema>) => {
     setIsSubmitting(true);
     try {
-      await createQuestion({
-        title: values.title,
-        content: values.explanation,
-        tags: values.tags,
-        author: JSON.parse(mongoUserId),
-        path: pathname,
-      });
-
-      router.push('/');
+      if (type === 'edit') {
+        await editQuestion({
+          questionId: parseQuestionDetails._id,
+          title: values.title,
+          content: values.explanation,
+          path: pathname,
+        });
+        router.push(`/questions/${parseQuestionDetails._id}`);
+      } else {
+        await createQuestion({
+          title: values.title,
+          content: values.explanation,
+          tags: values.tags,
+          author: JSON.parse(mongoUserId),
+          path: pathname,
+        });
+        router.push('/');
+      }
     } catch (error) {
       console.log('submitting error: ' + error);
     } finally {
@@ -147,7 +168,7 @@ const Question: React.FC<Props> = ({ mongoUserId = '' }) => {
                   onEditorChange={(content) => {
                     field.onChange(content);
                   }}
-                  initialValue=""
+                  initialValue={parseQuestionDetails.content || ''}
                   init={{
                     height: 350,
                     menubar: false,
@@ -197,6 +218,7 @@ const Question: React.FC<Props> = ({ mongoUserId = '' }) => {
               <FormControl className="mt-3.5">
                 <>
                   <Input
+                    disabled={type === 'edit'}
                     className="no-focus paragraph-regular background-light900_dark300 light-border-2 text-dark300_light700 min-h-[56px] border"
                     placeholder="Add tags..."
                     onKeyDown={(e) => handleInputKeyDown(e, field)}
@@ -209,14 +231,16 @@ const Question: React.FC<Props> = ({ mongoUserId = '' }) => {
                           className="subtle-medium background-light800_dark300 text-light400_light500 flex-center gap-2 rounded-md border-none px-4 py-2 uppercase"
                         >
                           {tag}{' '}
-                          <Image
-                            src="assets/icons/close.svg"
-                            alt="Close"
-                            width={12}
-                            height={12}
-                            className="cursor-pointer object-contain invert-0 dark:invert"
-                            onClick={() => handleTagRemove(tag, field)}
-                          />
+                          {type !== 'edit' && (
+                            <Image
+                              src="assets/icons/close.svg"
+                              alt="Close"
+                              width={12}
+                              height={12}
+                              className="cursor-pointer object-contain invert-0 dark:invert"
+                              onClick={() => handleTagRemove(tag, field)}
+                            />
+                          )}
                         </Badge>
                       ))}
                     </div>
