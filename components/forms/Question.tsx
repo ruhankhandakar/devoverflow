@@ -44,7 +44,9 @@ const Question: React.FC<Props> = ({
     ? JSON.parse(questionDetails)
     : {};
 
-  const groupedTags = (parseQuestionDetails?.tags || []).map((tag) => tag.name);
+  const groupedTags = (parseQuestionDetails?.tags || []).map(
+    (tag: { name: string }) => tag.name
+  );
 
   console.log('parseQuestionDetails', parseQuestionDetails);
 
