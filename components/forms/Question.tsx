@@ -48,14 +48,12 @@ const Question: React.FC<Props> = ({
     (tag: { name: string }) => tag.name
   );
 
-  console.log('parseQuestionDetails', parseQuestionDetails);
-
   // 1. Define your form.
   const form = useForm<z.infer<typeof QuestionsSchema>>({
     resolver: zodResolver(QuestionsSchema),
     defaultValues: {
-      title: parseQuestionDetails.title || '',
-      explanation: parseQuestionDetails.content || '',
+      title: parseQuestionDetails?.title || '',
+      explanation: parseQuestionDetails?.content || '',
       tags: groupedTags || [],
     },
   });
@@ -65,12 +63,12 @@ const Question: React.FC<Props> = ({
     try {
       if (type === 'edit') {
         await editQuestion({
-          questionId: parseQuestionDetails._id,
+          questionId: parseQuestionDetails?._id,
           title: values.title,
           content: values.explanation,
           path: pathname,
         });
-        router.push(`/questions/${parseQuestionDetails._id}`);
+        router.push(`/questions/${parseQuestionDetails?._id}`);
       } else {
         await createQuestion({
           title: values.title,
@@ -170,7 +168,7 @@ const Question: React.FC<Props> = ({
                   onEditorChange={(content) => {
                     field.onChange(content);
                   }}
-                  initialValue={parseQuestionDetails.content || ''}
+                  initialValue={parseQuestionDetails?.content || ''}
                   init={{
                     height: 350,
                     menubar: false,
