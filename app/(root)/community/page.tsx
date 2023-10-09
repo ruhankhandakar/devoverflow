@@ -7,9 +7,12 @@ import UserCard from '@/components/cards/UserCard';
 
 import { UserFilters } from '@/constants/filters';
 import { getAllUsers } from '@/lib/actions/user.action';
+import { SearchParamsProps } from '@/types';
 
-const Page = async () => {
-  const result = await getAllUsers();
+const Page = async ({ searchParams }: SearchParamsProps) => {
+  const result = await getAllUsers({
+    searchQuery: searchParams.q,
+  });
 
   return (
     <>
