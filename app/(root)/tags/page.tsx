@@ -7,9 +7,12 @@ import Filter from '@/components/shared/Filter';
 import { TagFilters } from '@/constants/filters';
 import NoResult from '@/components/shared/NoResult';
 import { getAllTags } from '@/lib/actions/tag.action';
+import { SearchParamsProps } from '@/types';
 
-const Page = async () => {
-  const result = await getAllTags();
+const Page = async ({ searchParams }: SearchParamsProps) => {
+  const result = await getAllTags({
+    searchQuery: searchParams.q,
+  });
 
   return (
     <>
