@@ -1,5 +1,6 @@
 'use server';
 import { revalidatePath } from 'next/cache';
+import { FilterQuery } from 'mongoose';
 
 import { connectToDatabase } from '../mongoose';
 import Question from '@/database/question.model';
@@ -17,12 +18,23 @@ import { QuestionData } from '@/types';
 import Answer from '@/database/answer.model';
 import InterAction from '@/database/interaction.model';
 
-export async function getQuestions(params?: GetQuestionsParams) {
+export async function getQuestions(params: GetQuestionsParams) {
   try {
     // Connect to DB
     await connectToDatabase();
 
-    const questions = (await Question.find({})
+    const { searchQuery } = params;
+
+    const query: FilterQuery<typeof Question> = {};
+
+    if (searchQuery) {
+      query.$or = [
+        { title: { $regex: new RegExp(searchQuery, 'i') } },
+        { content: { $regex: new RegExp(searchQuery, 'i') } },
+      ];
+    }
+
+    const questions = (await Question.find(query)
       .populate({
         path: 'tags',
         model: Tag,
@@ -30,7 +42,8 @@ export async function getQuestions(params?: GetQuestionsParams) {
       .populate({
         path: 'author',
         model: User,
-      })) as QuestionData[];
+      })
+      .sort({ createdAt: -1 })) as QuestionData[];
     return { questions };
   } catch (error) {
     console.error('getQuestions', error);
