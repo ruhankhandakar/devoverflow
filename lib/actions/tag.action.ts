@@ -34,13 +34,13 @@ export async function getTopInteractedTags(params: GetTopInteractedTagsParams) {
   }
 }
 
-export async function getAllTags(
-  params: GetAllTagsParams
-): Promise<{ tags: ITag[] }> {
+export async function getAllTags(params: GetAllTagsParams) {
   try {
     await connectToDatabase();
 
-    const { searchQuery, filter } = params;
+    const { searchQuery, filter, page = 1, pageSize = 20 } = params;
+
+    const skipAmount = (page - 1) * pageSize;
 
     const query: FilterQuery<typeof Tag> = {};
 
@@ -68,12 +68,20 @@ export async function getAllTags(
         break;
     }
 
-    const tags = await Tag.find(query).sort(sortOptions);
+    const tags = await Tag.find(query)
+      .skip(skipAmount)
+      .limit(pageSize)
+      .sort(sortOptions);
 
     if (!tags) throw new Error('Tags not found');
 
+    const totalTags = await Tag.countDocuments(query);
+
+    const isNext = totalTags > skipAmount + tags.length;
+
     return {
       tags,
+      isNext,
     };
   } catch (error: any) {
     console.error('getAllTags', error);
