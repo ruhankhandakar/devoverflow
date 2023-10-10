@@ -93,7 +93,9 @@ export async function getQuestionByTagId(params: GetQuestionsByTagIdParams) {
   try {
     await connectToDatabase();
 
-    const { tagId, searchQuery } = params;
+    const { tagId, searchQuery, page = 1, pageSize = 20 } = params;
+
+    const skipAmount = (page - 1) * pageSize;
 
     const tagFilter: FilterQuery<ITag> = { _id: tagId };
 
@@ -105,6 +107,8 @@ export async function getQuestionByTagId(params: GetQuestionsByTagIdParams) {
         : {},
       options: {
         sort: { createdAt: -1 },
+        skip: skipAmount,
+        limit: pageSize + 1,
       },
       populate: [
         { path: 'tags', model: Tag, select: '_id name' },
@@ -115,7 +119,9 @@ export async function getQuestionByTagId(params: GetQuestionsByTagIdParams) {
     if (!tag) throw new Error('User not found');
     const questions = tag.questions;
 
-    return { questions, tagTitle: tag.name };
+    const isNext = tag.questions.length > pageSize;
+
+    return { questions, tagTitle: tag.name, isNext };
   } catch (error: any) {
     console.error('getQuestionByTagId', error);
     throw new Error(error);
