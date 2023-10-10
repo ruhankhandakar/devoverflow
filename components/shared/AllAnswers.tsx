@@ -14,7 +14,7 @@ interface Props {
   questionId: string;
   userId: string;
   totalAnswers: number;
-  page?: number;
+  page?: string;
   filter?: string;
 }
 
@@ -25,7 +25,11 @@ const AllAnswers: React.FC<Props> = async ({
   page,
   filter,
 }) => {
-  const results = await getAnswers({ questionId: JSON.parse(questionId) });
+  const results = await getAnswers({
+    questionId: JSON.parse(questionId),
+    page: page ? +page : 1,
+    sortBy: filter,
+  });
 
   return (
     <div className="my-11">

@@ -40,7 +40,7 @@ export async function getAllTags(
   try {
     await connectToDatabase();
 
-    const { searchQuery } = params;
+    const { searchQuery, filter } = params;
 
     const query: FilterQuery<typeof Tag> = {};
 
@@ -48,7 +48,27 @@ export async function getAllTags(
       query.$or = [{ name: { $regex: new RegExp(searchQuery, 'i') } }];
     }
 
-    const tags = await Tag.find(query);
+    let sortOptions = {};
+
+    switch (filter) {
+      case 'popular':
+        sortOptions = { questions: -1 };
+        break;
+      case 'recent':
+        sortOptions = { createdOn: -1 };
+        break;
+      case 'name':
+        sortOptions = { name: 1 };
+        break;
+      case 'old':
+        sortOptions = { createdOn: 1 };
+        break;
+      default:
+        sortOptions = { createdOn: -1 };
+        break;
+    }
+
+    const tags = await Tag.find(query).sort(sortOptions);
 
     if (!tags) throw new Error('Tags not found');
 

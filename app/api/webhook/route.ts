@@ -2,6 +2,7 @@ import { Webhook } from 'svix';
 import { headers } from 'next/headers';
 import { WebhookEvent } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
+import { generateUsername } from 'unique-username-generator';
 
 import { createUser, deleteUser, updateUser } from '@/lib/actions/user.action';
 
@@ -67,7 +68,7 @@ export async function POST(req: Request) {
     const mongoUser = await createUser({
       clerkId: id,
       name: `${firstName}${lastName ? ' ' + lastName : ''}`,
-      username: username!,
+      username: username || generateUsername(),
       email: emails[0].email_address,
       picture: imageUrl,
     });
@@ -92,7 +93,7 @@ export async function POST(req: Request) {
       clerkId: id,
       updateData: {
         name: `${firstName}${lastName ? ' ' + lastName : ''}`,
-        username: username!,
+        username: username || generateUsername(),
         email: emails[0].email_address,
         picture: imageUrl,
       },
