@@ -3,6 +3,7 @@ import React from 'react';
 import { getUserQuestions } from '@/lib/actions/user.action';
 import { QuestionData, SearchParamsProps } from '@/types';
 import QuestionCard from '../cards/QuestionCard';
+import Pagination from './Pagination';
 
 interface Props extends SearchParamsProps {
   userId: string;
@@ -14,13 +15,13 @@ const QuestionsTab: React.FC<Props> = async ({
   userId,
   clerkId,
 }) => {
-  const { questions } = await getUserQuestions({
+  const { questions, isNext } = await getUserQuestions({
     userId,
-    page: 1,
+    page: searchParams.page ? +searchParams.page : 1,
   });
 
   return (
-    <div>
+    <>
       {questions.map((question: QuestionData) => (
         <QuestionCard
           key={JSON.stringify(question._id)}
@@ -28,7 +29,13 @@ const QuestionsTab: React.FC<Props> = async ({
           clerkId={clerkId}
         />
       ))}
-    </div>
+      <div className="mt-5">
+        <Pagination
+          pageNumber={searchParams?.page ? +searchParams.page : 1}
+          isNext={isNext}
+        />
+      </div>
+    </>
   );
 };
 
