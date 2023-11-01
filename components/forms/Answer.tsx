@@ -18,7 +18,6 @@ import { AnswerSchema } from '@/lib/validations';
 import { useTheme } from '@/context/ThemeProvider';
 import { Button } from '../ui/button';
 import { createAnswer } from '@/lib/actions/answer.action';
-import { QuestionData } from '@/types';
 
 interface Props {
   author: string;

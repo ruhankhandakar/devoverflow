@@ -74,7 +74,7 @@ export default async function Home({ searchParams }: SearchParamsProps) {
 
       <div className="mt-10 flex w-full flex-col gap-6 ">
         {questions.length ? (
-          questions.map((question) => (
+          questions.map((question: any) => (
             <QuestionCard key={JSON.stringify(question._id)} data={question} />
           ))
         ) : (
