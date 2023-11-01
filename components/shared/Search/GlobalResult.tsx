@@ -13,7 +13,7 @@ const GlobalResult = () => {
   const searchParams = useSearchParams();
 
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setResult] = useState([]);
+  const [result, setResult] = useState<any>([]);
 
   const global = searchParams.get('global');
   const type = searchParams.get('filter');
@@ -72,7 +72,7 @@ const GlobalResult = () => {
         ) : (
           <div className="flex flex-col gap-2">
             {result.length > 0 ? (
-              result.map((item, index: number) => (
+              result.map((item: any, index: number) => (
                 <Link
                   key={item.type + item.id + index}
                   href={renderLink(item.type, item.id.toString())}
