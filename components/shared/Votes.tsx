@@ -11,6 +11,7 @@ import { formatNumberWithExtension } from '@/lib/utils';
 import { downvoteAnswer, upvoteAnswer } from '@/lib/actions/answer.action';
 import { toggleSaveQuestion } from '@/lib/actions/user.action';
 import { viewQuestion } from '@/lib/actions/interacton.action';
+import { useToast } from '../ui/use-toast';
 
 interface Props {
   type: 'Question' | 'Answer';
@@ -33,11 +34,18 @@ const Votes: React.FC<Props> = ({
   hasDownvoted,
   hasSaved,
 }) => {
+  const { toast } = useToast();
+
   const pathName = usePathname();
   const router = useRouter();
 
   const handleVote = async (action: 'upvote' | 'downvote') => {
-    if (!userId) return;
+    if (!userId) {
+      return toast({
+        title: 'Please log in',
+        description: 'You must be logged in to perform this action',
+      });
+    }
     if (action === 'upvote') {
       if (type === 'Question') {
         await upvoteQuestion({
@@ -56,8 +64,10 @@ const Votes: React.FC<Props> = ({
           path: pathName,
         });
       }
-      //   TODO: show a toast notification
-      return;
+      return toast({
+        title: `Upvote ${!hasUpvoted ? 'Successful' : 'Removed'}`,
+        variant: !hasUpvoted ? 'default' : 'destructive',
+      });
     }
 
     if (action === 'downvote') {
@@ -78,7 +88,10 @@ const Votes: React.FC<Props> = ({
           path: pathName,
         });
       }
-      //   TODO: show a toast notification
+      return toast({
+        title: `Download ${!hasDownvoted ? 'Successful' : 'Removed'}`,
+        variant: !hasDownvoted ? 'default' : 'destructive',
+      });
     }
   };
   const handleSave = async () => {
