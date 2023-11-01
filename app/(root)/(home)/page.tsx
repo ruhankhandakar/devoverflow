@@ -10,19 +10,38 @@ import NoResult from '@/components/shared/NoResult';
 import Pagination from '@/components/shared/Pagination';
 import QuestionCard from '@/components/cards/QuestionCard';
 
-import { getQuestions } from '@/lib/actions/question.action';
+import {
+  getQuestions,
+  getRecommendedQuestions,
+} from '@/lib/actions/question.action';
 import { SearchParamsProps } from '@/types';
+import { auth } from '@clerk/nextjs';
 
 export const metadata: Metadata = {
   title: 'Home | DevFlow',
 };
 
 export default async function Home({ searchParams }: SearchParamsProps) {
-  const { questions = [], isNext = false } = await getQuestions({
-    searchQuery: searchParams.q,
-    filter: searchParams.filter,
-    page: searchParams.page ? +searchParams.page : 1,
-  });
+  const { userId } = auth();
+
+  let questions: any = [];
+  let isNext = false;
+
+  if (searchParams?.filter === 'recommended') {
+    if (userId) {
+      ({ questions = [], isNext = false } = await getRecommendedQuestions({
+        userId,
+        searchQuery: searchParams.q,
+        page: searchParams.page ? +searchParams.page : 1,
+      }));
+    }
+  } else {
+    ({ questions = [], isNext = false } = await getQuestions({
+      searchQuery: searchParams.q,
+      filter: searchParams.filter,
+      page: searchParams.page ? +searchParams.page : 1,
+    }));
+  }
 
   return (
     <>

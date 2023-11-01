@@ -89,7 +89,7 @@ const Votes: React.FC<Props> = ({
         });
       }
       return toast({
-        title: `Download ${!hasDownvoted ? 'Successful' : 'Removed'}`,
+        title: `Downvote ${!hasDownvoted ? 'Successful' : 'Removed'}`,
         variant: !hasDownvoted ? 'default' : 'destructive',
       });
     }
