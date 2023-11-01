@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import type { Metadata } from 'next';
 
 import { Button } from '@/components/ui/button';
 import LocalSearch from '@/components/shared/Search/LocalSearch';
@@ -11,6 +12,10 @@ import QuestionCard from '@/components/cards/QuestionCard';
 
 import { getQuestions } from '@/lib/actions/question.action';
 import { SearchParamsProps } from '@/types';
+
+export const metadata: Metadata = {
+  title: 'Home | DevFlow',
+};
 
 export default async function Home({ searchParams }: SearchParamsProps) {
   const { questions = [], isNext = false } = await getQuestions({

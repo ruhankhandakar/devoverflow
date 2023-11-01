@@ -1,5 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 
 import LocalSearch from '@/components/shared/Search/LocalSearch';
 import Filter from '@/components/shared/Filter';
@@ -9,6 +10,10 @@ import Pagination from '@/components/shared/Pagination';
 import { UserFilters } from '@/constants/filters';
 import { getAllUsers } from '@/lib/actions/user.action';
 import { SearchParamsProps } from '@/types';
+
+export const metadata: Metadata = {
+  title: 'Community | DevFlow',
+};
 
 const Page = async ({ searchParams }: SearchParamsProps) => {
   const result = await getAllUsers({
